@@ -1,5 +1,7 @@
 <?php
 
+namespace Assets\Config\Migration;
+
 class CounterCache extends CakeMigration {
 
 	public $description = '';

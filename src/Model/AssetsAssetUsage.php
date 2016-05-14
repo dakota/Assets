@@ -1,11 +1,12 @@
 <?php
 
-App::uses('AssetsAppModel', 'Assets.Model');
 
 /**
  * AssetsAssetUsage Model
  *
  */
+namespace Assets\Model;
+
 class AssetsAssetUsage extends AssetsAppModel {
 
 	public $useTable = 'asset_usages';

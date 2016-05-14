@@ -1,5 +1,7 @@
 <?php
 
+namespace Assets\Config\Schema;
+
 class AssetSchema extends CakeSchema {
 
 	public function before($event = array()) {

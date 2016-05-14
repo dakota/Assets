@@ -5,7 +5,7 @@ if (!Configure::read('Assets.installed')) {
 }
 
 spl_autoload_register(function($class) {
-	$defaultPath = CakePlugin::path('Assets') . 'Vendor' . DS . 'Gaufrette' . DS . 'src' . DS;
+	$defaultPath = Plugin::path('Assets') . 'Vendor' . DS . 'Gaufrette' . DS . 'src' . DS;
 	$base = Configure::read('Assets.GaufretteLib');
 	if (empty($base)) {
 		$base = $defaultPath;
@@ -28,7 +28,6 @@ Croogo::mergeConfig('Wysiwyg.actions', array(
 	'AssetsAttachments/admin_browse',
 ));
 
-App::uses('StorageManager', 'Assets.Lib');
 StorageManager::config('LocalAttachment', array(
 	'description' => 'Local Attachment',
 	'adapterOptions' => array(WWW_ROOT . 'assets', true),

@@ -6,6 +6,8 @@
  * @copyright 2012 Florian Kr�mer
  * @license MIT
  */
+namespace Assets\Lib\Utility;
+
 class FileStorageUtils {
 /**
  * Gaufrette Vendor Classloader
@@ -16,7 +18,7 @@ class FileStorageUtils {
 	public static function gaufretteLoader($class) {
 		$base = Configure::read('FileStorage.GaufretteLib');
 		if (empty($base)) {
-			$base = CakePlugin::path('FileStorage') . 'Vendor' . DS . 'Gaufrette' . DS . 'src' . DS;
+			$base = Plugin::path('FileStorage') . 'Vendor' . DS . 'Gaufrette' . DS . 'src' . DS;
 		}
 
 		$class = str_replace('\\', DS, $class);

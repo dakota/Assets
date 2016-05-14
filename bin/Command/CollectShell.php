@@ -1,6 +1,7 @@
 <?php
 
-App::uses('AppShell', 'Console/Command');
+
+namespace Assets\Console\Command;
 
 class CollectShell extends AppShell {
 
@@ -45,7 +46,7 @@ class CollectShell extends AppShell {
 			}
 			$this->out();
 			if ($tasks - $errors > 0) {
-				$this->out('<warning>' . __d('assets', 'Task has %d tasks and %d errors?', $tasks, $errors) . '</warning>');
+				$this->out('<warning>' . __d('assets', 'Task has {0} tasks and {1} errors?', $tasks, $errors) . '</warning>');
 				$continue = $this->in('Continue?', array('Y', 'n'), 'n');
 				if ($continue == 'n') {
 					$this->out('Aborted');
@@ -55,7 +56,7 @@ class CollectShell extends AppShell {
 		}
 		$result = $Attachment->runTask($importTask);
 
-		$message = __d('assets', 'Processed %d files with %d errors', $result['imports'], $result['errors']);
+		$message = __d('assets', 'Processed {0} files with {1} errors', $result['imports'], $result['errors']);
 		if ($result['errors'] == 0) {
 			$message = sprintf('<warning>%s</warning>', $message);
 			$this->out($message);

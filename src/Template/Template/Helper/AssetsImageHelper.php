@@ -1,6 +1,7 @@
 <?php
 
-App::uses('ImageHelper', 'Croogo.View/Helper');
+
+namespace Assets\View\Helper;
 
 class AssetsImageHelper extends ImageHelper {
 

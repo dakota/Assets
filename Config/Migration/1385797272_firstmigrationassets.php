@@ -1,5 +1,7 @@
 <?php
 
+namespace Assets\Config\Migration;
+
 class FirstMigrationAssets extends CakeMigration {
 
 	public $description = '';

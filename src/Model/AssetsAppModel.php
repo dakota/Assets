@@ -1,6 +1,7 @@
 <?php
 
-App::uses('AppModel', 'Model');
+
+namespace Assets\Model;
 
 class AssetsAppModel extends AppModel {
 

@@ -1,11 +1,12 @@
 <?php
 
-App::uses('AssetsAppModel', 'Assets.Model');
 
 /**
  * AssetsAttachment Model
  *
  */
+namespace Assets\Model;
+
 class AssetsAttachment extends AssetsAppModel {
 
 	public $useTable = 'attachments';
@@ -195,7 +196,7 @@ class AssetsAttachment extends AssetsAppModel {
  */
 	public function createFromFile($file) {
 		if (!file_exists($file)) {
-			throw new InvalidArgumentException(__('%s cannot be found', $file));
+			throw new InvalidArgumentException(__('{0} cannot be found', $file));
 		}
 
 		$finfo = new finfo(FILEINFO_MIME_TYPE);
@@ -288,7 +289,7 @@ class AssetsAttachment extends AssetsAppModel {
 				$dir = substr($dir, 0, strlen($dir) - 1);
 			}
 			if (!is_dir($dir)) {
-				throw new InvalidArgumentException(__('%s is not a directory', $dir));
+				throw new InvalidArgumentException(__('{0} is not a directory', $dir));
 			}
 			$folder = new Folder($dir, false, false);
 			if ($options['recursive']) {

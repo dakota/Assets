@@ -1,14 +1,19 @@
 <?php
 
+<<<<<<< Updated upstream
 App::uses('CakeEventListener', 'Event');
 App::uses('CakeLog', 'Log');
+=======
+>>>>>>> Stashed changes
 
 /**
  * AssetsEventHandler
  *
  * @license  http://www.opensource.org/licenses/mit-license.php The MIT License
  */
-class AssetsEventHandler implements CakeEventListener {
+namespace Assets\Event;
+
+class AssetsEventHandler implements EventListener {
 
 /**
  * implementedEvents

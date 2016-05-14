@@ -1,7 +1,7 @@
 <?php
 
-App::uses('AssetsAppModel', 'Assets.Model');
-App::uses('StorageManager', 'Assets.Lib');
+
+namespace Assets\Model;
 
 class AssetsAsset extends AssetsAppModel {
 

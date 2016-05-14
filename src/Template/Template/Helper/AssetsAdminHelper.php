@@ -1,6 +1,7 @@
 <?php
 
-App::uses('AppHelper', 'View/Helper');
+
+namespace Assets\View\Helper;
 
 class AssetsAdminHelper extends AppHelper {
 

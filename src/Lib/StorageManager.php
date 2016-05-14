@@ -6,6 +6,8 @@
  * @copyright 2012 Florian Krämer
  * @license MIT
  */
+namespace Assets\Lib;
+
 class StorageManager {
 
 /**
@@ -99,7 +101,7 @@ class StorageManager {
 
 		if (isset($_this->_adapterConfig[$name])) {
 			if ($_this->_activeAdapter == $name) {
-				throw new RuntimeException(__d('FileStorage', 'You can not flush the active adapter %s', $name));
+				throw new RuntimeException(__d('FileStorage', 'You can not flush the active adapter {0}', $name));
 			}
 			unset($_this->_adapterConfig[$name]);
 			return true;
@@ -128,7 +130,7 @@ class StorageManager {
 			if (!empty($_this->_adapterConfig[$adapterName])) {
 				$adapter = $_this->_adapterConfig[$adapterName];
 			} else {
-				throw new RuntimeException(__d('FileStorage', 'Invalid Storage Adapter %s', $adapterName));
+				throw new RuntimeException(__d('FileStorage', 'Invalid Storage Adapter {0}', $adapterName));
 			}
 
 			if (!empty($_this->_adapterConfig[$adapterName]['object']) && $renewObject === false) {

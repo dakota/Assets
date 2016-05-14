@@ -1,5 +1,7 @@
 <?php
 
+namespace Assets\Config;
+
 $handlers = array();
 if (Configure::read('Assets.installed')) {
 	$handlers = array(

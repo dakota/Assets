@@ -8,6 +8,8 @@
  * @author   Rachman Chavik <contact@xintesa.com>
  * @license  http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+namespace Assets\Config;
+
 class AssetsActivation {
 
 /**
@@ -17,13 +19,13 @@ class AssetsActivation {
  * @return boolean
  */
 	public function beforeActivation(&$controller) {
-		if (!CakePlugin::loaded('Imagine')) {
+		if (!Plugin::loaded('Imagine')) {
 			$plugins = App::objects('plugins');
 			if (in_array('Imagine', $plugins)) {
 				$plugin = new CroogoPlugin();
 				$plugin->addBootstrap('Imagine');
-				CakePlugin::load('Imagine');
-				CakeLog::info('Imagine plugin added to bootstrap');
+				Plugin::load('Imagine');
+				Log::info('Imagine plugin added to bootstrap');
 			}
 		}
 		return true;

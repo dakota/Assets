@@ -1,6 +1,7 @@
 <?php
 
-App::uses('AssetsAppController', 'Assets.Controller');
+
+namespace Assets\Controller;
 
 class AssetsAssetsController extends AssetsAppController {
 
