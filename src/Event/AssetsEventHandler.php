@@ -1,11 +1,4 @@
 <?php
-
-<<<<<<< Updated upstream
-App::uses('CakeEventListener', 'Event');
-App::uses('CakeLog', 'Log');
-=======
->>>>>>> Stashed changes
-
 /**
  * AssetsEventHandler
  *
