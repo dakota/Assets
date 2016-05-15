@@ -1,31 +1,32 @@
 <?php
 
-
 namespace Assets\View\Helper;
 
-class AssetsAdminHelper extends AppHelper {
+class AssetsAdminHelper extends AppHelper
+{
 
-	public $helpers = array(
-		'Html',
-	);
+    public $helpers = [
+        'Html',
+    ];
 
-	public function beforeRender($viewFile) {
-		if (empty($this->request->params['admin'])) {
-			return;
-		}
+    public function beforeRender($viewFile)
+    {
+        if (empty($this->request->params['admin'])) {
+            return;
+        }
 
-		if ($this->_View->theme === 'AdminExtras') {
-			$this->Html->css(array(
-				'bootstrap-editable',
-			), array(
-				'inline' => false,
-			));
-			$this->Html->script(array(
-				'bootstrap-editable.min',
-			), array(
-				'block' => 'scriptBottom',
-			));
-		}
-	}
+        if ($this->_View->theme === 'AdminExtras') {
+            $this->Html->css([
+                'bootstrap-editable',
+            ], [
+                'inline' => false,
+            ]);
+            $this->Html->script([
+                'bootstrap-editable.min',
+            ], [
+                'block' => 'scriptBottom',
+            ]);
+        }
+    }
 
 }

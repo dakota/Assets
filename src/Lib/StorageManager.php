@@ -8,161 +8,175 @@
  */
 namespace Assets\Lib;
 
-class StorageManager {
+class StorageManager
+{
 
-/**
- * Adapter configs
- *
- * @var array
- */
-	protected $_adapterConfig = array(
-		'Local' => array(
-			'adapterOptions' => array(TMP, true),
-			'adapterClass' => '\Gaufrette\Adapter\Local',
-			'class' => '\Gaufrette\Filesystem'));
+    /**
+     * Adapter configs
+     *
+     * @var array
+     */
+    protected $_adapterConfig = [
+        'Local' => [
+            'adapterOptions' => [TMP, true],
+            'adapterClass' => '\Gaufrette\Adapter\Local',
+            'class' => '\Gaufrette\Filesystem',
+        ],
+    ];
 
-/**
- * Sets the default or active adapter that is used
- *
- * @var string
- */
-	protected $_activeAdapter = 'Local';
+    /**
+     * Sets the default or active adapter that is used
+     *
+     * @var string
+     */
+    protected $_activeAdapter = 'Local';
 
-/**
- * Return a singleton instance of the StorageManager.
- *
- * @return ClassRegistry instance
- */
-	public static function &getInstance() {
-		static $instance = array();
-		if (!$instance) {
-			$instance[0] = new StorageManager();
-		}
-		return $instance[0];
-	}
+    /**
+     * Sets or gets the active storage adapter
+     *
+     * @param string
+     * @return mixed
+     */
+    public static function config($adapter = null, $options = [])
+    {
+        $_this = StorageManager::getInstance();
 
-/**
- * Sets or gets the active storage adapter
- *
- * @param string
- * @return mixed
- */
-	public static function config($adapter = null, $options = array()) {
-		$_this = StorageManager::getInstance();
+        if (!empty($adapter) && !empty($options)) {
+            return $_this->_adapterConfig[$adapter] = $options;
+        }
 
-		if (!empty($adapter) && !empty($options)) {
-			return $_this->_adapterConfig[$adapter] = $options;
-		}
+        if (empty($adapter)) {
+            return $_this->_adapterConfig[$_this->_activeAdapter];
+        }
 
-		if (empty($adapter)) {
-			return $_this->_adapterConfig[$_this->_activeAdapter];
-		}
+        if (isset($_this->_adapterConfig[$adapter])) {
+            return $_this->_adapterConfig[$adapter];
+        }
 
-		if (isset($_this->_adapterConfig[$adapter])) {
-			return $_this->_adapterConfig[$adapter];
-		}
+        return false;
+    }
 
-		return false;
-	}
+    /**
+     * Return a singleton instance of the StorageManager.
+     *
+     * @return ClassRegistry instance
+     */
+    public static function &getInstance()
+    {
+        static $instance = [];
+        if (!$instance) {
+            $instance[0] = new StorageManager();
+        }
 
-/**
- * Sets or gets the active storage adapter
- *
- * @param string
- * @return mixed
- */
-	public static function activeAdapter($name = null) {
-		$_this = StorageManager::getInstance();
+        return $instance[0];
+    }
 
-		if (empty($name)) {
-			return $_this->_activeAdapter;
-		}
+    /**
+     * Sets or gets the active storage adapter
+     *
+     * @param string
+     * @return mixed
+     */
+    public static function activeAdapter($name = null)
+    {
+        $_this = StorageManager::getInstance();
 
-		if (isset($_this->_adapterConfig[$name])) {
-			return $_this->_activeAdapter = $name;
-		}
-		return false;
-	}
+        if (empty($name)) {
+            return $_this->_activeAdapter;
+        }
 
-/**
- * Flush all or a single adapter from the config
- *
- * @param string $name Config name, if none all adapters are flushed
- * @throws RuntimeException
- * @return boolean True on success
- */
-	public static function flush($name = null) {
-		$_this = StorageManager::getInstance();
+        if (isset($_this->_adapterConfig[$name])) {
+            return $_this->_activeAdapter = $name;
+        }
 
-		if (empty($name)) {
-			$_this->_adapterConfig = array();
-			$_this->_activeAdapter = '';
-		}
+        return false;
+    }
 
-		if (isset($_this->_adapterConfig[$name])) {
-			if ($_this->_activeAdapter == $name) {
-				throw new RuntimeException(__d('FileStorage', 'You can not flush the active adapter {0}', $name));
-			}
-			unset($_this->_adapterConfig[$name]);
-			return true;
-		}
+    /**
+     * Flush all or a single adapter from the config
+     *
+     * @param string $name Config name, if none all adapters are flushed
+     * @throws RuntimeException
+     * @return boolean True on success
+     */
+    public static function flush($name = null)
+    {
+        $_this = StorageManager::getInstance();
 
-		return false;
-	}
+        if (empty($name)) {
+            $_this->_adapterConfig = [];
+            $_this->_activeAdapter = '';
+        }
 
-/**
- * StorageAdapter
- *
- * @param mixed $adapterName string of adapter configuration or array of settings
- * @param boolean $renewObject Creates a new instance of the given adapter in the configuration
- * @throws RuntimeException
- * @return Gaufrette object as configured by first arg
- */
-	public static function adapter($adapterName = null, $renewObject = false) {
-		$_this = StorageManager::getInstance();
+        if (isset($_this->_adapterConfig[$name])) {
+            if ($_this->_activeAdapter == $name) {
+                throw new RuntimeException(__d('FileStorage', 'You can not flush the active adapter {0}', $name));
+            }
+            unset($_this->_adapterConfig[$name]);
 
-		if (empty($adapterName)) {
-			$adapterName = $_this->_activeAdapter;
-		}
+            return true;
+        }
 
-		$isConfigured = true;
-		if (is_string($adapterName)) {
-			if (!empty($_this->_adapterConfig[$adapterName])) {
-				$adapter = $_this->_adapterConfig[$adapterName];
-			} else {
-				throw new RuntimeException(__d('FileStorage', 'Invalid Storage Adapter {0}', $adapterName));
-			}
+        return false;
+    }
 
-			if (!empty($_this->_adapterConfig[$adapterName]['object']) && $renewObject === false) {
-				return $_this->_adapterConfig[$adapterName]['object'];
-			}
-		}
+    /**
+     * StorageAdapter
+     *
+     * @param mixed $adapterName string of adapter configuration or array of settings
+     * @param boolean $renewObject Creates a new instance of the given adapter in the configuration
+     * @throws RuntimeException
+     * @return Gaufrette object as configured by first arg
+     */
+    public static function adapter($adapterName = null, $renewObject = false)
+    {
+        $_this = StorageManager::getInstance();
 
-		if (is_array($adapterName)) {
-			$adapter = $adapterName;
-			$isConfigured = false;
-		}
+        if (empty($adapterName)) {
+            $adapterName = $_this->_activeAdapter;
+        }
 
-		$class = $adapter['adapterClass'];
-		$rc = new ReflectionClass($class);
-		$adapterObject = $rc->newInstanceArgs($adapter['adapterOptions']);
-		$engineObject = new $adapter['class']($adapterObject);
-		if ($isConfigured) {
-			$_this->_adapterConfig[$adapterName]['object'] = &$engineObject;
-		}
-		return $engineObject;
-	}
+        $isConfigured = true;
+        if (is_string($adapterName)) {
+            if (!empty($_this->_adapterConfig[$adapterName])) {
+                $adapter = $_this->_adapterConfig[$adapterName];
+            } else {
+                throw new RuntimeException(__d('FileStorage', 'Invalid Storage Adapter {0}', $adapterName));
+            }
 
-	public static function configured() {
-		$_this = StorageManager::getInstance();
-		$config = array();
-		foreach ($_this->_adapterConfig as $k => $v) {
-			if (empty($v['description'])) {
-				continue;
-			}
-			$config[$k] = $v['description'];
-		}
-		return $config;
-	}
+            if (!empty($_this->_adapterConfig[$adapterName]['object']) && $renewObject === false) {
+                return $_this->_adapterConfig[$adapterName]['object'];
+            }
+        }
+
+        if (is_array($adapterName)) {
+            $adapter = $adapterName;
+            $isConfigured = false;
+        }
+
+        $class = $adapter['adapterClass'];
+        $rc = new ReflectionClass($class);
+        $adapterObject = $rc->newInstanceArgs($adapter['adapterOptions']);
+        $engineObject = new $adapter['class']($adapterObject);
+        if ($isConfigured) {
+            $_this->_adapterConfig[$adapterName]['object'] = &$engineObject;
+        }
+
+        return $engineObject;
+    }
+
+    public static function configured()
+    {
+        $_this = StorageManager::getInstance();
+        $config = [];
+        foreach ($_this->_adapterConfig as $k => $v) {
+            if (empty($v['description'])) {
+                continue;
+            }
+            $config[$k] = $v['description'];
+        }
+
+        return $config;
+    }
 
 }

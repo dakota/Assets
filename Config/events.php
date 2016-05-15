@@ -1,16 +1,16 @@
 <?php
 
-namespace Assets\Config;
+use Cake\Core\Configure;
 
-$handlers = array();
+$handlers = [];
 if (Configure::read('Assets.installed')) {
-	$handlers = array(
-		'Assets.AssetsEventHandler',
-		'Assets.LegacyLocalAttachmentStorageHandler',
-		'Assets.LocalAttachmentStorageHandler',
-	);
+    $handlers = [
+        'Assets.AssetsEventHandler',
+        'Assets.LegacyLocalAttachmentStorageHandler',
+        'Assets.LocalAttachmentStorageHandler',
+    ];
 }
 
-$config = array(
-	'EventHandlers' => $handlers,
-);
+return [
+    'EventHandlers' => $handlers,
+];

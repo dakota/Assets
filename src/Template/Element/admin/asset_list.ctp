@@ -1,208 +1,191 @@
 <?php $this->append('page-heading'); ?>
-<style>
-td .actions a:hover{
-	text-decoration: none;
-}
-td .actions a.unregister-usage {
-	color: #9D261D;
-}
-</style>
+    <style>
+        td .actions a:hover {
+            text-decoration: none;
+        }
+
+        td .actions a.unregister-usage {
+            color: #9D261D;
+        }
+    </style>
 <?php
 $this->end();
 
-$this->Html->script('Assets.admin.js', array('block' => 'scriptBottom'));
+$this->Html->script('Assets.admin.js', ['block' => 'scriptBottom']);
 
 $model = isset($model) ? $model : $this->Form->defaultModel;
 $primaryKey = isset($primaryKey) ? $primaryKey : 'id';
 $id = isset($foreignKey) ? $foreignKey : $this->data[$model][$primaryKey];
 
-$detailUrl = array(
-	'plugin' => 'assets',
-	'controller' => 'assets_attachments',
-	'action' => 'browse',
-	'?' => array(
-		'model' => $model,
-		'foreign_key' => $id,
-	),
-);
+$detailUrl = [
+    'plugin' => 'assets',
+    'controller' => 'assets_attachments',
+    'action' => 'browse',
+    '?' => [
+        'model' => $model,
+        'foreign_key' => $id,
+    ],
+];
 
-$changeTypeUrl = array(
-	'admin' => true,
-	'plugin' => 'assets',
-	'controller' => 'assets_asset_usages',
-	'action' => 'change_type',
-);
+$changeTypeUrl = [
+    'admin' => true,
+    'plugin' => 'assets',
+    'controller' => 'assets_asset_usages',
+    'action' => 'change_type',
+];
 
-$assetListUrl = $this->Html->url(array(
-	'admin' => true,
-	'plugin' => 'assets',
-	'controller' => 'assets_attachments',
-	'action' => 'list',
-	'?' => array(
-		'model' => $model,
-		'foreign_key' => $id,
-	),
-));
+$assetListUrl = $this->Html->url([
+    'admin' => true,
+    'plugin' => 'assets',
+    'controller' => 'assets_attachments',
+    'action' => 'list',
+    '?' => [
+        'model' => $model,
+        'foreign_key' => $id,
+    ],
+]);
 
-$unregisterUsageUrl = array(
-	'admin' => true,
-	'plugin' => 'assets',
-	'controller' => 'assets_asset_usages',
-	'action' => 'unregister',
-);
+$unregisterUsageUrl = [
+    'admin' => true,
+    'plugin' => 'assets',
+    'controller' => 'assets_asset_usages',
+    'action' => 'unregister',
+];
 
 if (!isset($attachments)):
-	$Attachment = ClassRegistry::init('Assets.AssetsAttachment');
-	$attachments = $Attachment->find('modelAttachments', array(
-		'model' => $model,
-		'foreign_key' => $id,
-	));
+    $Attachment = ClassRegistry::init('Assets.AssetsAttachment');
+    $attachments = $Attachment->find('modelAttachments', [
+        'model' => $model,
+        'foreign_key' => $id,
+    ]);
 endif;
 
-$headers = array(
-	__d('croogo', 'Preview'),
-	__d('croogo', 'Type'),
-	__d('croogo', 'Size'),
-	__d('croogo', 'Actions'),
-);
+$headers = [
+    __d('croogo', 'Preview'),
+    __d('croogo', 'Type'),
+    __d('croogo', 'Size'),
+    __d('croogo', 'Actions'),
+];
 
 if (!$this->Helpers->loaded('AssetsImage')) {
-	$this->AssetsImage = $this->Helpers->load('Assets.AssetsImage');
+    $this->AssetsImage = $this->Helpers->load('Assets.AssetsImage');
 }
 
-$rows = array();
+$rows = [];
 foreach ($attachments as $attachment):
-	$row = $action = array();
-	$path = $attachment['AssetsAsset']['path'];
-	list($mimeType, ) = explode('/', $attachment['AssetsAsset']['mime_type']);
+    $row = $action = [];
+    $path = $attachment['AssetsAsset']['path'];
+    list($mimeType,) = explode('/', $attachment['AssetsAsset']['mime_type']);
 
-	if ($mimeType === 'image'):
-		$imgUrl = $this->AssetsImage->resize($path, 100, 200,
-			array('adapter' => $attachment['AssetsAsset']['adapter']),
-			array('alt' => $attachment['AssetsAttachment']['title'])
-		);
-		$thumbnail = $this->Html->link($imgUrl, $path,
-			array('escape' => false, 'class' => 'thickbox', 'title' => $attachment['AssetsAttachment']['title'])
-		);
-	else:
-		$imgUrl = $this->Html->image('/croogo/img/icons/page_white.png') . ' ' . $attachment['AssetsAsset']['filename'];
-		$thumbnail = $this->Html->link($imgUrl,
-			$attachment['AssetsAsset']['path'], array(
-				'escape' => false,
-				'target' => '_blank',
-			)
-		);
-	endif;
+    if ($mimeType === 'image'):
+        $imgUrl = $this->AssetsImage->resize($path, 100, 200, ['adapter' => $attachment['AssetsAsset']['adapter']],
+            ['alt' => $attachment['AssetsAttachment']['title']]);
+        $thumbnail = $this->Html->link($imgUrl, $path,
+            ['escape' => false, 'class' => 'thickbox', 'title' => $attachment['AssetsAttachment']['title']]);
+    else:
+        $imgUrl = $this->Html->image('/croogo/img/icons/page_white.png') . ' ' . $attachment['AssetsAsset']['filename'];
+        $thumbnail = $this->Html->link($imgUrl, $attachment['AssetsAsset']['path'], [
+                'escape' => false,
+                'target' => '_blank',
+            ]);
+    endif;
 
-	$preview = $this->Html->div(null, $thumbnail);
-	if ($mimeType === 'image'):
-		$preview .= $this->Html->div(null, sprintf(
-			'<small>Shortcode: [image:%s]</small>', $attachment['AssetsAssetUsage']['id']
-		));
-		$preview .= $this->Html->tag('small', sprintf(
-			'Dimension: %sx%s', $attachment['AssetsAsset']['width'], $attachment['AssetsAsset']['height']
-		));
-	endif;
+    $preview = $this->Html->div(null, $thumbnail);
+    if ($mimeType === 'image'):
+        $preview .= $this->Html->div(null,
+            sprintf('<small>Shortcode: [image:%s]</small>', $attachment['AssetsAssetUsage']['id']));
+        $preview .= $this->Html->tag('small',
+            sprintf('Dimension: %sx%s', $attachment['AssetsAsset']['width'], $attachment['AssetsAsset']['height']));
+    endif;
 
-	$detailUrl['?']['asset_id'] = $attachment['AssetsAsset']['id'];
+    $detailUrl['?']['asset_id'] = $attachment['AssetsAsset']['id'];
 
-	$typeCell = $this->Html->link($attachment['AssetsAssetUsage']['type'], 'javascript:void(0)', array(
-		'class' => 'editable editable-click usage-type',
-		'data-pk' => $attachment['AssetsAssetUsage']['id'],
-		'data-url' => $this->Html->url($changeTypeUrl),
-		'data-name' => 'type',
-	));
+    $typeCell = $this->Html->link($attachment['AssetsAssetUsage']['type'], 'javascript:void(0)', [
+        'class' => 'editable editable-click usage-type',
+        'data-pk' => $attachment['AssetsAssetUsage']['id'],
+        'data-url' => $this->Html->url($changeTypeUrl),
+        'data-name' => 'type',
+    ]);
 
-	$row[] = $preview;
-	$row[] = $typeCell;
-	$row[] = $this->Number->toReadableSize($attachment['AssetsAsset']['filesize']);
+    $row[] = $preview;
+    $row[] = $typeCell;
+    $row[] = $this->Number->toReadableSize($attachment['AssetsAsset']['filesize']);
 
-	if ($mimeType === 'image'):
-		$action[] = $this->Croogo->adminRowAction('', $detailUrl, array(
-			'icon' => 'suitcase',
-			'data-toggle' => 'browse',
-			'tooltip' => __d('assets', 'View other sizes'),
-		));
+    if ($mimeType === 'image'):
+        $action[] = $this->Croogo->adminRowAction('', $detailUrl, [
+            'icon' => 'suitcase',
+            'data-toggle' => 'browse',
+            'tooltip' => __d('assets', 'View other sizes'),
+        ]);
 
-		$action[] = $this->Croogo->adminRowAction('', $changeTypeUrl, array(
-			'icon' => 'star',
-			'class' => 'change-usage-type',
-			'data-pk' => $attachment['AssetsAssetUsage']['id'],
-			'data-value' => 'FeaturedImage',
-			'tooltip' => __d('assets', 'Set as FeaturedImage'),
-		));
+        $action[] = $this->Croogo->adminRowAction('', $changeTypeUrl, [
+            'icon' => 'star',
+            'class' => 'change-usage-type',
+            'data-pk' => $attachment['AssetsAssetUsage']['id'],
+            'data-value' => 'FeaturedImage',
+            'tooltip' => __d('assets', 'Set as FeaturedImage'),
+        ]);
 
-		$action[] = $this->Croogo->adminRowAction('', $unregisterUsageUrl, array(
-			'icon' => 'trash',
-			'class' => 'unregister-usage',
-			'data-id' => $attachment['AssetsAssetUsage']['id'],
-			'tooltip' => __d('assets', 'Unregister asset from this resource'),
-		));
-	else:
-		$action[] = null;
-	endif;
-	$row[] = '<span class="actions">' . implode('&nbsp;', $action) . '</span>';
-	$rows[] = $row;
+        $action[] = $this->Croogo->adminRowAction('', $unregisterUsageUrl, [
+            'icon' => 'trash',
+            'class' => 'unregister-usage',
+            'data-id' => $attachment['AssetsAssetUsage']['id'],
+            'tooltip' => __d('assets', 'Unregister asset from this resource'),
+        ]);
+    else:
+        $action[] = null;
+    endif;
+    $row[] = '<span class="actions">' . implode('&nbsp;', $action) . '</span>';
+    $rows[] = $row;
 endforeach;
 
-$browseUrl = array_merge(
-	Configure::read('Wysiwyg.attachmentBrowseUrl'),
-	array(
-		'?' => array('model' => $model, 'foreign_key' => $id),
-	)
-);
+$browseUrl = array_merge(Configure::read('Wysiwyg.attachmentBrowseUrl'), [
+        '?' => ['model' => $model, 'foreign_key' => $id],
+    ]);
 
-$uploadUrl = array(
-	'admin' => true,
-	'plugin' => 'assets',
-	'controller' => 'assets_attachments',
-	'action' => 'add',
-	'editor' => true,
-	'?' => array(
-		'model' => $model,
-		'foreign_key' => $id,
-	),
-);
+$uploadUrl = [
+    'admin' => true,
+    'plugin' => 'assets',
+    'controller' => 'assets_attachments',
+    'action' => 'add',
+    'editor' => true,
+    '?' => [
+        'model' => $model,
+        'foreign_key' => $id,
+    ],
+];
 
 $this->append('actions');
-	echo $this->Croogo->adminAction(__d('assets', 'Reload'),
-		$browseUrl,
-		array(
-			'icon' => 'refresh',
-			'iconSize' => 'small',
-			'data-toggle' => 'refresh',
-		)
-	);
-	echo $this->Croogo->adminAction(__d('assets', 'Browse'),
-		$browseUrl,
-		array(
-			'icon' => 'folder-open',
-			'iconSize' => 'small',
-			'data-toggle' => 'browse',
-		)
-	);
-	echo $this->Croogo->adminAction(__d('assets', 'Upload'),
-		$uploadUrl,
-		array(
-			'icon' => 'upload-alt',
-			'iconSize' => 'small',
-			'data-toggle' => 'browse',
-		)
-	);
+echo $this->Croogo->adminAction(__d('assets', 'Reload'), $browseUrl, [
+        'icon' => 'refresh',
+        'iconSize' => 'small',
+        'data-toggle' => 'refresh',
+    ]);
+echo $this->Croogo->adminAction(__d('assets', 'Browse'), $browseUrl, [
+        'icon' => 'folder-open',
+        'iconSize' => 'small',
+        'data-toggle' => 'browse',
+    ]);
+echo $this->Croogo->adminAction(__d('assets', 'Upload'), $uploadUrl, [
+        'icon' => 'upload-alt',
+        'iconSize' => 'small',
+        'data-toggle' => 'browse',
+    ]);
 $this->end();
 
 ?>
-<div class="<?php echo $this->Layout->cssClass('row'); ?>">
-	<div class="<?php echo $this->Layout->cssClass('fullColumn'); ?>">
-		<table class="<?php echo $this->Layout->cssClass('tableClass'); ?> asset-list" data-url="<?php echo $assetListUrl; ?>">
-			<thead><?php echo $this->Html->tableHeaders($headers); ?></thead>
-			<tbody><?php echo $this->Html->tableCells($rows); ?></tbody>
-		</table>
-	</div>
-</div>
+    <div class="<?php echo $this->Layout->cssClass('row'); ?>">
+        <div class="<?php echo $this->Layout->cssClass('fullColumn'); ?>">
+            <table class="<?php echo $this->Layout->cssClass('tableClass'); ?> asset-list"
+                   data-url="<?php echo $assetListUrl; ?>">
+                <thead><?php echo $this->Html->tableHeaders($headers); ?></thead>
+                <tbody><?php echo $this->Html->tableCells($rows); ?></tbody>
+            </table>
+        </div>
+    </div>
 <?php
 
-$script =<<<EOF
+$script = <<<EOF
 	if (typeof $.fn.editable == 'function') {
 		$('.editable').editable();
 	} else {
@@ -211,7 +194,7 @@ $script =<<<EOF
 	tb_init('a.thickbox');
 EOF;
 if ($this->request->is('ajax')):
-	echo $this->Html->scriptBlock($script);
+    echo $this->Html->scriptBlock($script);
 else:
-	$this->Js->buffer($script);
+    $this->Js->buffer($script);
 endif;

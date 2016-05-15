@@ -2,10 +2,10 @@
 
 extract($this->request->query);
 if (empty($model) || empty($foreign_key)):
-	return;
+    return;
 endif;
 
-echo $this->element('Assets.admin/asset_list', array(
-	'model' => $model,
-	'foreignKey' => $foreign_key,
-));
+echo $this->element('Assets.admin/asset_list', [
+    'model' => $model,
+    'foreignKey' => $foreign_key,
+]);

@@ -1,0 +1,12 @@
+{
+    "name": "Assets",
+    "description": "Croogo Assets Management Plugin",
+    "author": "Rachman Chavik",
+    "authorEmail": "oss@xintesa.com",
+    "authorUrl": "http://xintesa.com",
+    "dependencies": {
+        "plugins": [
+            "Imagine",
+        ]
+    }
+}

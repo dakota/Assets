@@ -1,8 +1,8 @@
 <?php
 
-
 namespace Assets\Controller;
 
-class AssetsAppController extends AppController {
+class AssetsAppController extends AppController
+{
 
 }
