@@ -6,6 +6,8 @@
  */
 namespace Assets\Model\Table;
 
+use Cake\Database\Expression\IdentifierExpression;
+use Cake\ORM\Query;
 use Cake\ORM\Table;
 
 class AttachmentsTable extends Table
@@ -359,45 +361,42 @@ class AttachmentsTable extends Table
         }
     }
 
-    protected function _findModelAttachments($state, $query = [], $results = [])
+    public function findModelAttachments(Query $query, $options)
     {
-        if ($state === 'after') {
-            return $results;
-        }
         $model = $foreignKey = null;
-        if (isset($query['model'])) {
-            $model = $query['model'];
-            unset($query['model']);
+        if (isset($options['model'])) {
+            $model = $options['model'];
+            unset($options['model']);
         }
-        if (isset($query['foreign_key'])) {
-            $foreignKey = $query['foreign_key'];
-            unset($query['foreign_key']);
+        if (isset($options['foreign_key'])) {
+            $foreignKey = $options['foreign_key'];
+            unset($options['foreign_key']);
         }
-        $this->unbindModel(['hasOne' => ['AssetsAsset']]);
-        $this->bindModel([
+        $this->associations()
+            ->remove('Assets');
+        $this->addAssociations([
             'hasOne' => [
-                'AssetsAsset' => [
-                    'className' => 'Assets.AssetsAsset',
+                'Assets' => [
+                    'className' => 'Assets.Assets',
                     'foreignKey' => false,
                     'conditions' => [
-                        'AssetsAsset.model = \'AssetsAttachment\'',
-                        'AssetsAsset.foreign_key = AssetsAttachment.id',
+                        'Assets.model' => $this->registryAlias(),
+                        'Assets.foreign_key' => new IdentifierExpression($this->aliasField('id')),
                     ],
                 ],
-                'AssetsAssetUsage' => [
-                    'className' => 'Assets.AssetUsage',
+                'AssetUsages' => [
+                    'className' => 'Assets.AssetUsages',
                     'foreignKey' => false,
                     'conditions' => [
-                        'AssetsAsset.id = AssetsAssetUsage.asset_id',
+                        'Assets.id' => new IdentifierExpression('asset_id'),
                     ],
                 ],
             ],
         ]);
-        $query = Hash::merge($query, [
-            'conditions' => [
-                'AssetsAssetUsage.model' => $model,
-                'AssetsAssetUsage.foreign_key' => $foreignKey,
-            ],
+        $query->contain(['Assets', 'AssetUsages']);
+        $query->where([
+            'AssetUsages.model' => $model,
+            'AssetUsages.foreign_key' => $foreignKey,
         ]);
 
         return $query;

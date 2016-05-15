@@ -11,11 +11,11 @@
 <?php
 $this->end();
 
-$this->Html->script('Assets.admin.js', ['block' => 'scriptBottom']);
+$this->Html->script('Assets.admin', ['block' => 'scriptBottom']);
 
 $model = isset($model) ? $model : $this->Form->defaultModel;
 $primaryKey = isset($primaryKey) ? $primaryKey : 'id';
-$id = isset($foreignKey) ? $foreignKey : $this->data[$model][$primaryKey];
+$id = isset($foreignKey) ? $foreignKey : $entity;
 
 $detailUrl = [
     'plugin' => 'assets',
@@ -28,16 +28,16 @@ $detailUrl = [
 ];
 
 $changeTypeUrl = [
-    'admin' => true,
+    'prefix' => 'admin',
     'plugin' => 'assets',
-    'controller' => 'assets_asset_usages',
+    'controller' => 'asset_usages',
     'action' => 'change_type',
 ];
 
-$assetListUrl = $this->Html->url([
-    'admin' => true,
+$assetListUrl = $this->Url->build([
+    'prefix' => 'admin',
     'plugin' => 'assets',
-    'controller' => 'assets_attachments',
+    'controller' => 'attachments',
     'action' => 'list',
     '?' => [
         'model' => $model,
@@ -46,14 +46,14 @@ $assetListUrl = $this->Html->url([
 ]);
 
 $unregisterUsageUrl = [
-    'admin' => true,
+    'prefix' => 'admin',
     'plugin' => 'assets',
-    'controller' => 'assets_asset_usages',
+    'controller' => 'asset_usages',
     'action' => 'unregister',
 ];
 
 if (!isset($attachments)):
-    $Attachment = ClassRegistry::init('Assets.AssetsAttachment');
+    $Attachment = \Cake\ORM\TableRegistry::get('Assets.Attachments');
     $attachments = $Attachment->find('modelAttachments', [
         'model' => $model,
         'foreign_key' => $id,
@@ -67,7 +67,7 @@ $headers = [
     __d('croogo', 'Actions'),
 ];
 
-if (!$this->Helpers->loaded('AssetsImage')) {
+if (!$this->helpers()->loaded('AssetsImage')) {
     $this->AssetsImage = $this->Helpers->load('Assets.AssetsImage');
 }
 
@@ -139,14 +139,14 @@ foreach ($attachments as $attachment):
     $rows[] = $row;
 endforeach;
 
-$browseUrl = array_merge(Configure::read('Wysiwyg.attachmentBrowseUrl'), [
+$browseUrl = array_merge(\Cake\Core\Configure::read('Wysiwyg.attachmentBrowseUrl'), [
         '?' => ['model' => $model, 'foreign_key' => $id],
     ]);
 
 $uploadUrl = [
-    'admin' => true,
+    'prefix' => 'admin',
     'plugin' => 'assets',
-    'controller' => 'assets_attachments',
+    'controller' => 'attachments',
     'action' => 'add',
     'editor' => true,
     '?' => [
@@ -174,9 +174,9 @@ echo $this->Croogo->adminAction(__d('assets', 'Upload'), $uploadUrl, [
 $this->end();
 
 ?>
-    <div class="<?php echo $this->Layout->cssClass('row'); ?>">
-        <div class="<?php echo $this->Layout->cssClass('fullColumn'); ?>">
-            <table class="<?php echo $this->Layout->cssClass('tableClass'); ?> asset-list"
+    <div class="<?php echo $this->Theme->getCssClass('row'); ?>">
+        <div class="<?php echo $this->Theme->getCssClass('fullColumn'); ?>">
+            <table class="<?php echo $this->Theme->getCssClass('tableClass'); ?> asset-list"
                    data-url="<?php echo $assetListUrl; ?>">
                 <thead><?php echo $this->Html->tableHeaders($headers); ?></thead>
                 <tbody><?php echo $this->Html->tableCells($rows); ?></tbody>

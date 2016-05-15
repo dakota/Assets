@@ -8,7 +8,7 @@ namespace Assets\Model\Table;
 
 use Cake\ORM\Table;
 
-class AssestUsagesTable extends Table
+class AssetUsagesTable extends Table
 {
     public function initialize(array $config)
     {

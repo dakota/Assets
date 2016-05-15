@@ -2,51 +2,35 @@
 
 namespace Assets\Model\Behavior;
 
-class LinkedAssetsBehavior extends ModelBehavior
+use Cake\Event\Event;
+use Cake\ORM\Behavior;
+use Cake\ORM\Query;
+
+class LinkedAssetsBehavior extends Behavior
 {
 
-    public function setup(Model $model, $config = [])
-    {
-        $config = Hash::merge([
-            'key' => 'LinkedAsset',
-        ], $config);
-        $this->settings[$model->alias] = $config;
+    protected $_defaultConfig = [
+        'key' => 'LinkedAsset',
+    ];
 
-        $model->bindModel([
-            'hasMany' => [
-                'AssetsAssetUsage' => [
-                    'className' => 'Assets.AssetsAssetUsage',
-                    'foreignKey' => 'foreign_key',
-                    'dependent' => true,
-                    'conditions' => [
-                        'model' => $model->alias,
-                    ],
-                ],
+    public function initialize(array $config = [])
+    {
+        $this->_table->hasMany('AssetUsages', [
+            'className' => 'Assets.AssetUsages',
+            'foreignKey' => 'foreign_key',
+            'dependent' => true,
+            'conditions' => [
+                'AssetUsages.model' => $this->_table->registryAlias(),
             ],
-        ], false);
+        ]);
     }
 
-    public function beforeFind(Model $model, $query)
+    public function beforeFind(Event $event, Query $query)
     {
-        if (!isset($query['contain'])) {
-            $contain = [];
-            $relationCheck = ['belongsTo', 'hasMany', 'hasOne', 'hasAndBelongsToMany'];
-            foreach ($relationCheck as $relation) {
-                if ($model->{$relation}) {
-                    $contain = Hash::merge($contain, array_keys($model->{$relation}));
-                }
-            }
-            if ($model->recursive >= 0 || $query['recursive'] >= 0) {
-                $query = Hash::merge(['contain' => $contain], $query);
-            }
+        $contain = $query->contain();
+        if (!isset($contain['AssetUsages']) && !in_array('AssetUsages', $contain)) {
+            $query->contain(['AssetUsages.Assets']);
         }
-        if (isset($query['contain'])) {
-            if (!isset($query['contain']['AssetsAssetUsage'])) {
-                $query['contain']['AssetsAssetUsage'] = 'AssetsAsset';
-            }
-        }
-
-        return $query;
     }
 
     public function afterFind(Model $model, $results, $primary = true)
