@@ -36,7 +36,7 @@ StorageManager::config('LegacyLocalAttachment', [
 
 // TODO: make this configurable via backend
 $actions = [
-    'Croogo/Nodes.Admin/Nodes/edit',
+    'Admin/Nodes/edit',
     'Blocks/admin_edit',
     'Types/admin_edit',
 ];
@@ -48,7 +48,7 @@ foreach ($actions as $action):
 endforeach;
 
 // TODO: make this configurable via backend
-$models = ['Block', 'Node', 'Type'];
+$models = ['Block', 'Croogo/Nodes.Nodes', 'Type'];
 foreach ($models as $model) {
     Croogo::hookBehavior($model, 'Assets.LinkedAssets', ['priority' => 9]);
 }
