@@ -62,6 +62,11 @@ class AttachmentsController extends AssetsAppController
         }
     }
 
+    public function index()
+    {
+        return $this->Crud->execute();
+    }
+
     /**
      * Admin add
      *
@@ -70,6 +75,7 @@ class AttachmentsController extends AssetsAppController
      */
     public function add()
     {
+        return $this->Crud->execute();
         $this->set('title_for_layout', __d('croogo', 'Add Attachment'));
 
         if (isset($this->request->params['named']['editor'])) {

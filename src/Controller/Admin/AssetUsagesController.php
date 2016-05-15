@@ -2,6 +2,8 @@
 
 namespace Assets\Controller\Admin;
 
+use Cake\Event\Event;
+
 class AssetUsagesController extends AssetsAppController
 {
 
