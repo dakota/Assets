@@ -1,15 +1,10 @@
 <?php
 
-namespace Assets\Controller;
+namespace Assets\Controller\Admin;
 
-class AssetsAssetsController extends AssetsAppController
+class AssetsController extends AssetsAppController
 {
-
-    public $uses = [
-        'Assets.AssetsAsset',
-    ];
-
-    public function admin_delete($id = null)
+    public function delete($id = null)
     {
         if ($id) {
             $result = $this->AssetsAsset->delete($id);

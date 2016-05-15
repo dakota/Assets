@@ -6,7 +6,7 @@
     "authorUrl": "http://xintesa.com",
     "dependencies": {
         "plugins": [
-            "Imagine",
+            "Burzum/Imagine"
         ]
     }
 }

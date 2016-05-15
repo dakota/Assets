@@ -1,14 +1,17 @@
 <?php
 
 use Cake\Core\Configure;
+use Croogo\Core\Croogo;
+use Assets\Lib\StorageManager;
 
 if (!Configure::read('Assets.installed')) {
     return;
 }
 
 Configure::write('Wysiwyg.attachmentBrowseUrl', [
-    'plugin' => 'assets',
-    'controller' => 'assets_attachments',
+    'prefix' => 'admin',
+    'plugin' => 'Assets',
+    'controller' => 'Attachments',
     'action' => 'browse',
 ]);
 

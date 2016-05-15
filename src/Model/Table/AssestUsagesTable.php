@@ -20,7 +20,7 @@ class AssestUsagesTable extends Table
             'foreignKey' => 'asset_id',
         ]);
 
-        $this->addBehavior('Croogo.Trackable');
+        $this->addBehavior('Croogo/Core.Trackable');
         $this->addBehavior('Timestamp');
         parent::initialize($config);
     }

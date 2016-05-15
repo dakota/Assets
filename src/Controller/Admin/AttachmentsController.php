@@ -12,9 +12,11 @@
  * @license  http://www.opensource.org/licenses/mit-license.php The MIT License
  * @link     http://www.croogo.org
  */
-namespace Assets\Controller;
+namespace Assets\Controller\Admin;
 
-class AssetsAttachmentsController extends AssetsAppController
+use Cake\Event\Event;
+
+class AttachmentsController extends AssetsAppController
 {
 
     /**
@@ -31,26 +33,15 @@ class AssetsAttachmentsController extends AssetsAppController
      * @var array
      * @access public
      */
-    public $helpers = ['FileManager.FileManager', 'Text', 'Assets.AssetsImage'];
-
-    public $paginate = [
-        'paramType' => 'querystring',
-        'limit' => 5,
-    ];
-
-    public $components = [
-        'Search.Prg' => [
-            'presetForm' => [
-                'paramType' => 'querystring',
-            ],
-            'commonProcess' => [
-                'paramType' => 'querystring',
-                'filterEmpty' => 'true',
-            ],
-        ],
-    ];
+    public $helpers = ['Croogo/FileManager.FileManager', 'Assets.AssetsImage'];
 
     public $presetVars = true;
+
+    public function initialize()
+    {
+        $this->loadComponent('Search.Prg');
+        parent::initialize();
+    }
 
     /**
      * Before executing controller actions
@@ -62,11 +53,11 @@ class AssetsAttachmentsController extends AssetsAppController
     {
         parent::beforeFilter($event);
 
-        $noCsrfCheck = ['admin_add', 'admin_resize'];
+        $noCsrfCheck = ['add', 'resize'];
         if (in_array($this->action, $noCsrfCheck)) {
             $this->Security->csrfCheck = false;
         }
-        if ($this->action == 'admin_resize') {
+        if ($this->action == 'resize') {
             $this->Security->validatePost = false;
         }
     }
@@ -77,12 +68,12 @@ class AssetsAttachmentsController extends AssetsAppController
      * @return void
      * @access public
      */
-    public function admin_add()
+    public function add()
     {
         $this->set('title_for_layout', __d('croogo', 'Add Attachment'));
 
         if (isset($this->request->params['named']['editor'])) {
-            $this->layout = 'admin_popup';
+            $this->layout = 'popup';
         }
 
         if ($this->request->is('post') || !empty($this->request->data)) {
@@ -129,12 +120,12 @@ class AssetsAttachmentsController extends AssetsAppController
      * @return void
      * @access public
      */
-    public function admin_edit($id = null)
+    public function edit($id = null)
     {
         $this->set('title_for_layout', __d('croogo', 'Edit Attachment'));
 
         if (isset($this->request->params['named']['editor'])) {
-            $this->layout = 'admin_popup';
+            $this->layout = 'popup';
         }
 
         $redirect = ['action' => 'index'];
@@ -170,7 +161,7 @@ class AssetsAttachmentsController extends AssetsAppController
      * @return void
      * @access public
      */
-    public function admin_delete($id = null)
+    public function delete($id = null)
     {
         if (!$id) {
             $this->Session->setFlash(__d('croogo', 'Invalid id for Attachment'), 'flash', ['class' => 'error']);
@@ -202,50 +193,13 @@ class AssetsAttachmentsController extends AssetsAppController
      * @return void
      * @access public
      */
-    public function admin_browse()
+    public function browse()
     {
-        $this->layout = 'admin_popup';
-        $this->admin_index();
+        $this->layout = 'popup';
+        $this->index();
     }
 
-    /**
-     * Admin index
-     *
-     * @return void
-     * @access public
-     */
-    public function admin_index()
-    {
-        $this->set('title_for_layout', __d('croogo', 'Attachments'));
-
-        $this->Prg->commonProcess();
-
-        if (empty($this->request->query)) {
-            $this->AssetsAttachment->recursive = 0;
-            $this->paginate['AssetsAttachment']['order'] = 'AssetsAttachment.created DESC';
-        } else {
-            if (isset($this->request->query['asset_id']) || isset($this->request->query['all'])) {
-                $this->paginate = array_merge(['versions'], $this->paginate);
-                if (isset($this->request->query['asset_id'])) {
-                    $this->paginate['asset_id'] = $this->request->query['asset_id'];
-                }
-                if (isset($this->request->query['all'])) {
-                    $this->paginate['all'] = true;
-                }
-            } else {
-                $this->paginate = array_merge(['modelAttachments'], $this->paginate);
-            }
-            if (isset($this->request->query['model'])) {
-                $this->paginate['model'] = $this->request->query['model'];
-            }
-            if (isset($this->request->query['foreign_key'])) {
-                $this->paginate['foreign_key'] = $this->request->query['foreign_key'];
-            };
-        }
-        $this->set('attachments', $this->paginate($this->AssetsAttachment->parseCriteria($this->request->query)));
-    }
-
-    public function admin_list()
+    public function lists()
     {
         $this->paginate = [
             'modelAttachments',
@@ -260,7 +214,7 @@ class AssetsAttachmentsController extends AssetsAppController
         $this->set(compact('attachments'));
     }
 
-    public function admin_resize($id = null)
+    public function resize($id = null)
     {
         if (empty($id)) {
             throw new NotFoundException('Missing Asset Id to resize');

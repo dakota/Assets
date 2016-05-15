@@ -6,7 +6,13 @@
  */
 namespace Assets\Event;
 
-class AssetsEventHandler implements EventListener
+use Cake\Event\EventListenerInterface;
+use Cake\Log\Log;
+use Cake\ORM\TableRegistry;
+use Croogo\Core\Croogo;
+use Croogo\Core\Nav;
+
+class AssetsEventHandler implements EventListenerInterface
 {
 
     /**
@@ -37,13 +43,13 @@ class AssetsEventHandler implements EventListener
         $attachment = $event->data['attachment'];
 
         if (empty($request->data['AssetsAsset']['AssetsAssetUsage'])) {
-            CakeLog::error('No asset usage record to register');
+            Log::error('No asset usage record to register');
 
             return;
         }
 
         $usage = $request->data['AssetsAsset']['AssetsAssetUsage'][0];
-        $Usage = ClassRegistry::init('Assets.AssetsAssetUsage');
+        $Usage = TableRegistry::get('Assets.AssetUsages');
         $data = $Usage->create([
             'asset_id' => $attachment['AssetsAsset']['id'],
             'model' => $usage['model'],
@@ -52,8 +58,8 @@ class AssetsEventHandler implements EventListener
         ]);
         $result = $Usage->save($data);
         if (!$result) {
-            CakeLog::error('Asset Usage registration failed');
-            CakeLog::error(print_r($Usage->validationErrors, true));
+            Log::error('Asset Usage registration failed');
+            Log::error(print_r($Usage->validationErrors, true));
         }
         $event->result = $result;
     }
@@ -65,9 +71,9 @@ class AssetsEventHandler implements EventListener
             'title' => 'Asset Image Attachments',
             'description' => 'Assets Attachments with image mime type',
             'url' => [
-                'plugin' => 'assets',
-                'controller' => 'assets_attachments',
-                'acion' => 'index',
+                'prefix' => 'admin',
+                'plugin' => 'Assets',
+                'controller' => 'Attachments',
                 '?' => [
                     'chooser_type' => 'image',
                     'chooser' => 1,
@@ -82,9 +88,9 @@ class AssetsEventHandler implements EventListener
             'title' => 'Asset Files Attachments',
             'description' => 'Assets Attachments with other mime types, ie. pdf, xls, doc, etc.',
             'url' => [
-                'plugin' => 'assets',
-                'controller' => 'assets_attachments',
-                'acion' => 'index',
+                'prefix' => 'admin',
+                'plugin' => 'Assets',
+                'controller' => 'Attachments',
                 '?' => [
                     'chooser_type' => 'file',
                     'chooser' => 1,
@@ -104,12 +110,12 @@ class AssetsEventHandler implements EventListener
      */
     public function onSetupAdminData($event)
     {
-        CroogoNav::add('media.children.attachments', [
+        Nav::add('media.children.attachments', [
             'title' => __d('croogo', 'Attachments'),
             'url' => [
-                'admin' => true,
-                'plugin' => 'assets',
-                'controller' => 'assets_attachments',
+                'prefix' => 'admin',
+                'plugin' => 'Assets',
+                'controller' => 'Attachments',
                 'action' => 'index',
             ],
         ]);

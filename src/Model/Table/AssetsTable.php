@@ -36,7 +36,7 @@ class AssetsTable extends Table
                 ]
             ]
         ]);
-        $this->addBehavior('Croogo.Trackable');
+        $this->addBehavior('Croogo/Core.Trackable');
         $this->addBehavior('Timestamp');
         parent::initialize($config);
     }

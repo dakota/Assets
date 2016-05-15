@@ -1,8 +1,8 @@
 <?php
 
-namespace Assets\Controller;
+namespace Assets\Controller\Admin;
 
-class AssetsAssetUsagesController extends AssetsAppController
+class AssetUsagesController extends AssetsAppController
 {
 
     public $uses = [

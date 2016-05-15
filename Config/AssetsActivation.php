@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Assets Activation
  *
@@ -8,8 +7,7 @@
  * @author   Rachman Chavik <contact@xintesa.com>
  * @license  http://www.opensource.org/licenses/mit-license.php The MIT License
  */
-namespace Assets\Config;
-
+use Cake\Core\Plugin;
 use Cake\ORM\TableRegistry;
 use Croogo\Extensions\CroogoPlugin;
 
@@ -24,14 +22,6 @@ class AssetsActivation
      */
     public function beforeActivation()
     {
-        if (!Plugin::loaded('Imagine')) {
-            Plugin::load('Imagine');
-            $plugin = new CroogoPlugin();
-            $plugin->addBootstrap('Imagine');
-            Plugin::load('Imagine');
-            Log::info('Imagine plugin added to bootstrap');
-        }
-
         return true;
     }
 
@@ -46,7 +36,7 @@ class AssetsActivation
         $CroogoPlugin = new CroogoPlugin();
         $result = $CroogoPlugin->migrate('Assets');
         if ($result) {
-            $settings = TableRegistry::get('Croogo/Settings.Setting');
+            $settings = TableRegistry::get('Croogo/Settings.Settings');
             $settings->write('Assets.installed', true);
         }
 
@@ -72,7 +62,7 @@ class AssetsActivation
      */
     public function onDeactivation()
     {
-        $settings = TableRegistry::get('Croogo/Settings.Setting');
+        $settings = TableRegistry::get('Croogo/Settings.Settings');
         $settings->deleteKey('Assets.installed');
     }
 

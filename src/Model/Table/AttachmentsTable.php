@@ -24,9 +24,9 @@ class AttachmentsTable extends Table
             ],
         ]);
 
-        $this->addBehavior('Croogo.Trackable');
+        $this->addBehavior('Croogo/Core.Trackable');
         $this->addBehavior('Search.Search');
-        $this->addBehavior('Imagine.Imagine');
+        $this->addBehavior('Burzum/Imagine.Imagine');
         $this->addBehavior('Timestamp');
         parent::initialize($config);
     }

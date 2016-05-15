@@ -2,7 +2,10 @@
 
 namespace Assets\View\Helper;
 
-class AssetsFilterHelper extends AppHelper
+use Cake\View\View;
+use Croogo\Core\View\Helper\CroogoAppHelper;
+
+class AssetsFilterHelper extends CroogoAppHelper
 {
 
     public $helpers = [
@@ -24,9 +27,9 @@ class AssetsFilterHelper extends AppHelper
                 'passParams' => true,
             ],
         ];
-        $eventManager = $this->_View->getEventManager();
+        $eventManager = $this->_View->eventManager();
         foreach ($events as $name => $config) {
-            $eventManager->attach([$this, 'filter'], $name, $config);
+            $eventManager->on($name, [$this, 'filter'], $config);
         }
     }
 

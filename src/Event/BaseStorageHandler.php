@@ -2,7 +2,10 @@
 
 namespace Assets\Event;
 
-abstract class BaseStorageHandler extends Object
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
+
+abstract class BaseStorageHandler
 {
 
     protected $_storage = null;
@@ -23,9 +26,8 @@ abstract class BaseStorageHandler extends Object
             'className' => $name,
         ], $config);
         $this->_config = $config;
-        parent::__construct();
         $this->_storage = str_replace('StorageHandler', '', $config['alias']);
-        $this->Attachment = ClassRegistry::init('Assets.AssetsAttachment');
+        $this->Attachment = TableRegistry::get('Assets.Attachments');
     }
 
     public function storage()

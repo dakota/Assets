@@ -2,6 +2,8 @@
 
 namespace Assets\View\Helper;
 
+use Croogo\Core\View\Helper\ImageHelper;
+
 class AssetsImageHelper extends ImageHelper
 {
 

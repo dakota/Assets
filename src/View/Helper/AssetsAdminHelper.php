@@ -2,7 +2,9 @@
 
 namespace Assets\View\Helper;
 
-class AssetsAdminHelper extends AppHelper
+use Croogo\Core\View\Helper\CroogoAppHelper;
+
+class AssetsAdminHelper extends CroogoAppHelper
 {
 
     public $helpers = [

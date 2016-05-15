@@ -1,11 +1,10 @@
 <?php
 
-$this->Html->script('Assets.admin', ['inline' => false]);
+$this->Html->script('Assets.admin', ['block' => true]);
 
 $this->extend('/Common/admin_index');
 
-$this->Html->addCrumb('', '/admin', ['icon' => 'home'])
-    ->addCrumb(__d('croogo', 'Attachments'), '/' . $this->request->url);
+$this->Html->addCrumb(__d('croogo', 'Attachments'));
 
 if (!empty($this->request->query)) {
     $query = $this->request->query;
@@ -15,33 +14,32 @@ if (!empty($this->request->query)) {
 
 $this->append('actions');
 
-echo $this->Croogo->adminAction(__d('croogo', 'New {0}', __d('croogo', 'Attachment')),
+echo $this->Croogo->adminAction(__d('croogo', 'New %s', __d('croogo', 'Attachment')),
     array_merge(['?' => $query], ['action' => 'add']), ['button' => 'success']);
 
 $this->end();
 
 $detailUrl = [
+    'prefix' => 'admin',
     'plugin' => 'assets',
-    'controller' => 'assets_attachments',
+    'controller' => 'attachments',
     'action' => 'browse',
     '?' => [
         'manage' => true,
-        'model' => 'AssetsAttachment',
+        'model' => 'Assets.Attachments',
         'foreign_key' => null,
         'asset_id' => null,
     ],
 ];
 
 $this->append('table-heading');
-$tableHeaders = $this->Html->tableHeaders([
+echo $this->Html->tableHeaders([
     $this->Paginator->sort('id', __d('croogo', 'Id')),
     '&nbsp;',
     $this->Paginator->sort('title', __d('croogo', 'Title')),
     __d('croogo', 'Versions'),
     __d('croogo', 'Actions'),
 ]);
-
-echo $this->Html->tag('thead', $tableHeaders);
 $this->end();
 
 $this->append('table-body');
@@ -106,8 +104,8 @@ foreach ($attachments as $attachment) {
         $this->Html->div(null, $attachment['AssetsAttachment']['title']) .
         '&nbsp;' .
         $this->Html->link($this->Html->url($path, true), $path, [
-                'target' => '_blank',
-            ]),
+            'target' => '_blank',
+        ]),
         $assetCount,
         $actions,
     ];

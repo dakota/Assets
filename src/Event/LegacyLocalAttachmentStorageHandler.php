@@ -2,7 +2,9 @@
 
 namespace Assets\Event;
 
-class LegacyLocalAttachmentStorageHandler extends BaseStorageHandler implements EventListener
+use Cake\Event\EventListenerInterface;
+
+class LegacyLocalAttachmentStorageHandler extends BaseStorageHandler implements EventListenerInterface
 {
 
     public function implementedEvents()
